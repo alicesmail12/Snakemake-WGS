@@ -112,6 +112,7 @@ module load picard Java
 ```
 
 **Step 7: Convert to VCF**
+
 Now I have a massive GVCF file, I can use **GenotypeGVCFS** to convert it into a smaller VCF file that just contains locations where there is a variant in at least one sample. 
 
 ```python
