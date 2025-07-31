@@ -100,10 +100,7 @@ Not only have I got multiple samples, I also have created GVCFs for every chromo
 with open('{Run}_gvcfs.list', 'w') as outfile:
       outfile.write('\n'.join(str(i) for i in '{File}_{Chr}.single.g.vcf.gz'))
 ```
-
-Then using the list I can call **CombineGVCFS**.
-
-```python
+```bash
 # Modules
 module load picard Java
 
