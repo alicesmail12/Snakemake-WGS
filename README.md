@@ -1,3 +1,5 @@
 # Snakemake-WGS
-### Steps
+## Steps
+### 1: FastQC
+
 
