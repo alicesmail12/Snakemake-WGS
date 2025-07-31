@@ -198,6 +198,7 @@ rule VCFConvert:
     -R {params.Index} \
     -V {input.GVCF} \
     -O {output.VCF}
+    echo "Genotype calling complete"
     """
     
 # Step 10: Split variant types
@@ -213,7 +214,8 @@ rule SplitVCF:
     """
     #!/bin/bash
     module load picard/2.20.6-Java-1.8.0_144 Java/17.0.6
-    
+
+    echo "Splitting variants into SNPs and indels"
     {params.GATKDir}/gatk SelectVariants \
     -V {input.VCF} \
     -select-type SNP \
@@ -223,6 +225,7 @@ rule SplitVCF:
     -V {input.VCF} \
     -select-type INDEL \
     -O {output.VCFIndel}
+    echo "Variant splitting complete"
     """
 
 # Step 11: Filter variants
@@ -266,6 +269,7 @@ rule FilterVCF:
     I={output.VCFSNP} \
     I={output.VCFIndel} \
     O={output.VCF}
+    echo "Variants filtered"
     """
 
 # Step 12: Normalise VCF
@@ -277,8 +281,10 @@ rule NormaliseVCF:
   shell:
     """
     #!/bin/bash
+    echo "Normalise VCF"
     module load BCFtools/1.10.2-foss-2019b
     bcftools norm -m - -Oz {input.VCF} > {output.VCF}
+    echo "VCF normalised"
     """
 
 # Step 13: VCF stats
