@@ -348,6 +348,7 @@ rule VEP:
     --pick_order rank,canonical,tsl \
     --buffer_size 50000 \
     --fork 8 
+    echo "VEP complete"
     """
 
 # Step 15: Format VEP Output
@@ -372,4 +373,5 @@ rule VEPFormat:
     --SampleName {params.Run} \
     --OMIMFile {params.OMIM} \
     --WDir {params.VEP_Dir}
+    echo "Formatting complete"
     """
