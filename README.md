@@ -8,7 +8,10 @@ Here I have created a snakemake workflow that performs WGS on several samples at
 
 In a snakemake workflow on a HPC this is how FastQC can be run:
 ```
+# Modules
 module load FastQC
+
+# Run
 fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 ```
 
@@ -19,7 +22,10 @@ fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 **SAMtools flagstat** and **SAMtools idxstats** can also be called to get a summary of the BWA alignment (for example, how many **total reads were aligned**, and how many were aligned to each chromosome).
 
 ```
+# Modules
 module load ncurses SAMtools BWA picard
+
+# Run
 bwa mem -M -t 12 {input.fasta} {input.R1} {input.R2} | samtools sort - -O bam | tee {output.BAM} | samtools index - {output.BAI}
 samtools flagstat {output.BAM} > {output.stat} 
 samtools idxstats {output.BAM} > {output.idx} 
@@ -30,11 +36,16 @@ samtools idxstats {output.BAM} > {output.idx}
 **PICARD MarkDuplicates** identifies and marks **duplicate reads**, and retains the read with the highest base quality scores. This is a way to try and correct for any sequencing errors. **SAMtools index** then indexes the output BAM file to generate a new **BAI file**.
 
 ```
-    module load SAMtools BWA picard
-    java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
+# Modules
+module load SAMtools BWA picard
+
+# Deduplicate
+java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
     I={input.BAM} \
     O={output.BAMdedup} \
     REMOVE_DUPLICATES=true \
     M={output.metrics}
-    samtools index {output.BAMdedup}
+
+# Index
+samtools index {output.BAMdedup}
 ```
