@@ -7,7 +7,7 @@ Here I have created a snakemake workflow that performs WGS on several samples at
 **FastQC** analyses FASTQ files and creates a **HTML quality check report**. This includes quality scores for each read and base position, as well as assessments of GC content, nucleotide distribution, read length, overrepresented sequences and adapter content. 
 
 In a snakemake workflow on a HPC this is how FastQC can be run:
-```
+```python
 # Modules
 module load FastQC
 
@@ -21,7 +21,7 @@ fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 
 **SAMtools flagstat** and **SAMtools idxstats** can also be called to get a summary of the BWA alignment (for example, how many **total reads were aligned**, and how many were aligned to each chromosome).
 
-```
+```python
 # Modules
 module load ncurses SAMtools BWA picard
 
@@ -35,7 +35,7 @@ samtools idxstats {output.BAM} > {output.idx}
 
 **PICARD MarkDuplicates** identifies and marks **duplicate reads**, and retains the read with the highest base quality scores. This is a way to try and correct for any sequencing errors. **SAMtools index** then indexes the output BAM file to generate a new **BAI file**.
 
-```
+```python
 # Modules
 module load SAMtools BWA picard
 
