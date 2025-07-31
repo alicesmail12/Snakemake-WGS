@@ -1,3 +1,3 @@
 # Snakemake-WGS
-Steps
+### Steps
 
