@@ -25,3 +25,16 @@ samtools flagstat {output.BAM} > {output.stat}
 samtools idxstats {output.BAM} > {output.idx} 
 ```
 
+**Step 3: Removing Duplicates**
+
+**PICARD MarkDuplicates** identifies and marks **duplicate reads**, and retains the read with the highest base quality scores. This is a way to try and correct for any sequencing errors. **SAMtools index** then indexes the output BAM file to generate a new **BAI file**.
+
+```
+    module load SAMtools BWA picard
+    java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
+    I={input.BAM} \
+    O={output.BAMdedup} \
+    REMOVE_DUPLICATES=true \
+    M={output.metrics}
+    samtools index {output.BAMdedup}
+```
