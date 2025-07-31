@@ -49,3 +49,73 @@ java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
 # Index
 samtools index {output.BAMdedup}
 ```
+
+**Step 4: Fixing Read Groups**
+
+I have run this in my workflow so that I can assign sample names to every read in a BAM file. This means I can make a group VCF file later on. **PICARD AddOrReplaceReadGroups** assigns RG values to all reads in a file.
+
+```python
+# Modules
+module load Java picard
+
+# Read groups
+java -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups \
+    I={input.BAMdedup} \
+    O={output.BAMRG} \
+    SORT_ORDER=coordinate \
+    RGPL=illumina \
+    RGSM={params.File} \
+    CREATE_INDEX=True \
+    RGPU={params.File} 
+```
+
+**Step 5: Haplotype Calling**
+
+**GATK HaplotypeCaller** calls SNPs and indels from each sample and creates a **GVCF file** which can then be used by GenotypeGVCFs to genotype multiple samples at a time, in a single file. The GVCF output contains the genotype at every genomic location, not just where there is variation from the reference.
+
+Here I have used the list flag (L) to generate a GVCF file for each chromosome, for every sample. This means this command can multi-thread and it runs a lot quicker.
+
+```python
+# Modules
+module load Java/17.0.6
+
+# Haplotype calling
+/Software/gatk-4.6.2.0/gatk --java-options "-Xmx80g" HaplotypeCaller \
+    -R {params.Index} \
+    -I {input.BAMdedup} \
+    -O {output} \
+    -L {params.Chr} \
+    -ERC GVCF \
+    --do-not-run-physical-phasing true \
+    --output-mode EMIT_VARIANTS_ONLY \
+    --native-pair-hmm-threads 12
+```
+
+**Step 6: Combine GVCFs**
+
+Not only have I got multiple samples, I also have created GVCFs for every chromosome in each sample: so I need to combine them using **CombineGVCFs**. First I make a list of all the files I want to combine.
+
+```python
+# Generate list
+with open('{Run}_gvcfs.list', 'w') as outfile:
+      outfile.write('\n'.join(str(i) for i in '{File}_{Chr}.single.g.vcf.gz'))
+```
+
+Then using the list I can call **CombineGVCFS**.
+
+```python
+# Modules
+module load picard Java
+
+# Combine
+/Software/gatk-4.6.2.0/gatk --java-options "-Xmx80g -XX:ParallelGCThreads=6 -Djava.io.tmpdir=./" CombineGVCFs \
+    -R {params.Index} \
+    --variant {input.GVCFList} \
+    -O {output.GVCFCom}
+```
+
+
+
+
+
+
