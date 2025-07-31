@@ -3,7 +3,7 @@ Here I have created a snakemake workflow that performs WGS on several samples at
 
 ### Steps
 **1: FastQC**
-'''
+```
 fastqc {input} -o {FASTQC_DIR}
-'''
+```
 
