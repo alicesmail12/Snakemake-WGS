@@ -14,7 +14,9 @@ fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 
 **Step 2: BWA Alignment**
 
-**BWA mem** takes a reference genome and **aligns reads** from a FASTQ file using the Burrows-Wheeler Aligner algorithm. **SAMtools sort** then sorts the resulting **BAM file** by coordinate, and **SAMtools index** indexes the output BAM file to generate a **BAI file**. **SAMtools flagstat** and **SAMtools idxstats** can also be called to get a summary of the BWA alignment (for example, how many **total reads were aligned**, and how many were aligned to each chromosome).
+**BWA mem** takes a reference genome and **aligns reads** from a FASTQ file using the Burrows-Wheeler Aligner algorithm. **SAMtools sort** then sorts the resulting **BAM file** by coordinate, and **SAMtools index** indexes the output BAM file to generate a **BAI file**. 
+
+**SAMtools flagstat** and **SAMtools idxstats** can also be called to get a summary of the BWA alignment (for example, how many **total reads were aligned**, and how many were aligned to each chromosome).
 
 ```
 module load ncurses SAMtools BWA picard
