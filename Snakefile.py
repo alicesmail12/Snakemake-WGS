@@ -8,7 +8,7 @@ numbers = list(range(1, 23))
 CHRS = ["chr" + str(num) for num in numbers]
 CHRS.extend(['chrM', 'chrX', 'chrY'])
 
-# Directories and files
+# Directories
 CAT_FASTQ_DIR='/Fastq-Files/'
 FASTQC_DIR='/FastQC-Output/'
 BWA_DIR='/BWA-Output/'
