@@ -111,7 +111,19 @@ module load picard Java
     -O {output.GVCFCom}
 ```
 
+**Step 7: Convert to VCF**
+Now I have a massive GVCF file, I can use **GenotypeGVCFS** to convert it into a smaller VCF file that just contains locations where there is a variant in at least one sample. 
 
+```python
+# Modules
+module load picard Java
+
+# Genotype
+/Software/gatk-4.6.2.0/gatk --java-options "-Xmx80g" GenotypeGVCFs \
+    -R {params.Index} \
+    -V {input.GVCF} \
+    -O {output.VCF}
+```
 
 
 
