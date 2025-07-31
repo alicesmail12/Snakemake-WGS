@@ -185,8 +185,8 @@ rule VCFConvert:
   input:
     GVCF = os.path.join(VCF_DIR, '{Run}.combined.g.vcf.gz')
   params:
-    GATKDir = "/mnt/storage/nobackup/proj/spnmmd/Alice/Software/gatk-4.6.2.0",
-    Index = "/mnt/storage/nobackup/proj/spnmmd/Alice/DNAseq-Pipeline-m1661/HG38/hg38.fa"
+    GATKDir = /Software/gatk-4.6.2.0",
+    Index = "hg38.fa"
   output:
     VCF = os.path.join(VCF_DIR, '{Run}.converted.vcf.gz')
   shell:
