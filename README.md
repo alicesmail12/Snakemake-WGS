@@ -12,3 +12,12 @@ module load FastQC
 fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 ```
 
+**Step 2: BWA Alignment**
+
+**BWA mem** takes a reference genome and **aligns reads** from a FASTQ file using the Burrows-Wheeler Aligner algorithm. **SAMtools sort** then sorts the resulting BAM file by coordinate, and **SAMtools index** indexes the output BAM file to generate a BAI file.
+
+```
+module load ncurses SAMtools BWA picard
+bwa mem -M -t 12 {input.fasta} {input.R1} {input.R2} | samtools sort - -O bam | tee {output.BAM} | samtools index - {output.BAI}
+```
+
