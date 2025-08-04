@@ -149,14 +149,14 @@ module load picard Java
 
 **Step 9: Filter Variant Types**
 
-With the split variant files I can apply different quality control filters.
+With the split variant files I can apply different quality control filters using `VariantFiltration`.
 - `QD` is a metric representing normalised variant quality. In the below code variants with a QD below 2 are marked with 'QD2'.
 - `QUAL` is the variant confidence (QD is derived from QUAL).
 - `SOR` is the Strand Odds Ratio, an estimation of strand bias that takes into account the ratio of reads covering two alleles.
 - `FS` is called Fisher strand, representing the Phred scaled probability of strand bias.
 - `MQ` gives a value for mapping quality.
 - `MQRankSum` compares mapping quality scores that support the reference allele or the alternate allele.
-- `ReadPosRankSumTest` compares whether the positions of the reference and alternate alleles are different across reads. A negative value means that the alternate allele is found at the ends of each read more often than the reference allele (and vice versa).
+- `ReadPosRankSum` compares whether the positions of the reference and alternate alleles are different across reads. A negative value means that the alternate allele is found at the ends of each read more often than the reference allele (and vice versa).
 
 ```bash
 # Modules
@@ -188,6 +188,22 @@ java -jar $EBROOTPICARD/picard.jar MergeVcfs \
     I={output.VCFIndel} \
     O={output.VCF}
 ```
+
+**Step 10: Normalise VCF**
+
+`BCFTools norm` left-aligns the variants and normalises indels, as well as checking if reference alleles match. Here I add `-m -` to split sites that are multi-allelic into rows that are biallelic, and `-Oz` to specify that the output is a compressed vcf. I can also run `BCFTools stats` to get some information about the vcf file, such as non-reference allele frequency, depth and read quality.
+
+```bash
+# Modules
+module load BCFtools texlive
+
+# Normalise
+bcftools norm -m - -Oz {input.VCF} > {output.VCF}
+
+# Stats
+bcftools stats -s - {input.VCF} > {output.VCFStats}
+```
+
 
 
 
