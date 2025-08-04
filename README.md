@@ -1,5 +1,5 @@
 # Snakemake-WGS
-Here I have created a snakemake workflow that performs WGS on several samples at once from FASTQ files. It can take a really long time, depending on HPC capacity!
+Here I have created a snakemake workflow that performs WGS on several samples at once from FASTQ files. It can take a really long time, depending on HPC capacity! Here I have just listed what each step does. Variables in curly braces are specified in my snakemake rules (see `Snakefile.py`).
 
 ### Steps
 **Step 1: FastQC**
