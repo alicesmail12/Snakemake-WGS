@@ -253,7 +253,7 @@ export PERL5LIB=$PERL5LIB:/Software/ensembl-vep-release-114/Plugins
 
 **Step 12: Format VEP Output**
 
-I have a **Python script** that takes in each VCF line and format the results for each sample, generating a **csv file**. The variables I pass to the Python file include the VCF file, the sample names (what I want the output to be called), an OMIM file (to annotate the VCF with OMIM entries), and the working directory where the output will be created.
+I have a **Python script** that takes in each VCF line and formats it, generating a **csv file** with 'HET', 'REF', 'HOM' or 'unknown' for each variant for each sample. The variables I pass to the Python file include the VCF file, the sample names (what I want the output to be called), an OMIM file (to annotate the VCF with OMIM entries), and the working directory where the output will be created.
 
 ```bash
 # Modules
