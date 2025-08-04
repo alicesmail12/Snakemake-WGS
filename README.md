@@ -4,10 +4,10 @@ Here I have created a snakemake workflow that performs WGS on several samples at
 ### Steps
 **Step 1: FastQC**
 
-**FastQC** analyses FASTQ files and creates a **HTML quality check report**, including quality scores for each read and base position, as well as assessments of GC content, nucleotide distribution, read length, overrepresented sequences and adapter content. 
+First I used `FastQC`, which analyses FASTQ files and creates a **HTML quality check report**, including quality scores for each read and base position, as well as assessments of GC content, nucleotide distribution, read length, overrepresented sequences and adapter content. 
 
 In a snakemake workflow on a HPC this is how FastQC can be run:
-```python
+```bash
 # Modules
 module load FastQC
 
@@ -17,11 +17,11 @@ fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 
 **Step 2: BWA Alignment**
 
-**BWA mem** takes a reference genome and **aligns reads** from a FASTQ file using the Burrows-Wheeler Aligner algorithm. **SAMtools sort** then sorts the resulting **BAM file** by coordinate, and **SAMtools index** indexes the output BAM file to generate a **BAI file**. 
+Then I used `BWA mem`, which takes a reference genome and **aligns reads** from a FASTQ file using the Burrows-Wheeler Aligner algorithm. `SAMtools sort` then sorts the resulting **BAM file** by coordinate, and `SAMtools index` indexes the output BAM file to generate a **BAI file**. 
 
-**SAMtools flagstat** and **SAMtools idxstats** can also be called to get a summary of the BWA alignment (for example, how many **total reads were aligned**, and how many were aligned to each chromosome).
+`SAMtools flagstat` and `SAMtools idxstats` can also be called to get a summary of the BWA alignment (for example, how many **total reads were aligned**, and how many were aligned to each chromosome).
 
-```python
+```bash
 # Modules
 module load ncurses SAMtools BWA picard
 
@@ -33,9 +33,9 @@ samtools idxstats {output.BAM} > {output.idx}
 
 **Step 3: Removing Duplicates**
 
-**PICARD MarkDuplicates** identifies and marks **duplicate reads**, and retains the read with the highest base quality scores. This is a way to try and correct for any sequencing errors. **SAMtools index** then indexes the output BAM file to generate a new **BAI file**.
+`MarkDuplicates` identifies and marks **duplicate reads**, and retains the read with the highest base quality scores. This is a way to try and correct for any sequencing errors. `SAMtools index` then indexes the output BAM file to generate a new **BAI file**.
 
-```python
+```bash
 # Modules
 module load SAMtools BWA picard
 
@@ -52,9 +52,9 @@ samtools index {output.BAMdedup}
 
 **Step 4: Fixing Read Groups**
 
-I have run this in my workflow so that I can assign sample names to every read in a BAM file. This means I can make a group VCF file later on. **PICARD AddOrReplaceReadGroups** assigns RG values to all reads in a file.
+I have run `AddOrReplaceReadGroups` in my workflow so that I can assign sample names to every read in a BAM file. This means I can make a group VCF file later on. 
 
-```python
+```bash
 # Modules
 module load Java picard
 
@@ -71,11 +71,11 @@ java -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups \
 
 **Step 5: Haplotype Calling**
 
-**GATK HaplotypeCaller** calls SNPs and indels from each sample and creates a **GVCF file** which can then be used by GenotypeGVCFs to genotype multiple samples at a time, in a single file. The GVCF output contains the genotype at every genomic location, not just where there is variation from the reference.
+`GATK HaplotypeCaller` calls SNPs and indels from each sample and creates a **GVCF file** which can then be used by GenotypeGVCFs to genotype multiple samples at a time, in a single file. The GVCF output contains the genotype at **every genomic location**, not just where there is variation from the reference.
 
-Here I have used the list flag (L) to generate a GVCF file for each chromosome, for every sample. This means this command can multi-thread and it runs a lot quicker.
+Here I have used the list flag (`L`) to generate a GVCF file for each chromosome, for every sample. This means this command can multi-thread and it runs a lot quicker.
 
-```python
+```bash
 # Modules
 module load Java/17.0.6
 
@@ -93,7 +93,7 @@ module load Java/17.0.6
 
 **Step 6: Combine GVCFs**
 
-Not only have I got multiple samples, I also have created GVCFs for every chromosome in each sample: so I need to combine them using **CombineGVCFs**. First I make a list of all the files I want to combine.
+Not only have I got multiple samples, I also have created GVCFs for every chromosome in each sample: so I need to combine them using `CombineGVCFs`. First I make a list of all the files I want to combine, and then input this into `CombineGVCFs` using the `--variant` flag.
 
 ```python
 # Generate list
@@ -113,9 +113,9 @@ module load picard Java
 
 **Step 7: Convert to VCF**
 
-Now I have a massive GVCF file, I can use **GenotypeGVCFS** to convert it into a smaller VCF file that just contains locations where there is a variant in at least one sample. 
+Now I have a massive GVCF file, I can use `GenotypeGVCFS` to convert it into a smaller VCF file that just contains locations where there is a variant in at least one sample. 
 
-```python
+```bash
 # Modules
 module load picard Java
 
@@ -125,6 +125,30 @@ module load picard Java
     -V {input.GVCF} \
     -O {output.VCF}
 ```
+
+**Step 8: Split Variant Types**
+
+From the vcf file, I can then use `SelectVariants` to split the vcf into indels and SNPs for later filtering.
+
+```bash
+# Modules
+module load picard Java
+
+# Get SNPs    
+{params.GATKDir}/gatk SelectVariants \
+    -V {input.VCF} \
+    -select-type SNP \
+    -O {output.VCFSNP}
+
+# Get indels
+{params.GATKDir}/gatk SelectVariants \
+    -V {input.VCF} \
+    -select-type INDEL \
+    -O {output.VCFIndel}
+```
+
+
+
 
 
 
