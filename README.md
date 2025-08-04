@@ -204,7 +204,52 @@ bcftools norm -m - -Oz {input.VCF} > {output.VCF}
 bcftools stats -s - {input.VCF} > {output.VCFStats}
 ```
 
+**Step 11: VEP**
 
+Here I use `VEP` locally to gather extra information about each variant, such as gene, PolyPhen/Sift/CADD scores and gnomAD allele frequencies. To run this step I downloaded VEP (https://grch38.ensembl.org/info/docs/tools/vep/script/vep_download.html) and some files required for the plugins. VEP can take a really long time depending on how many annotations you want to make. 
+
+```bash
+# Modules
+module load Perl tabix Bio-DB-HTS DBD-mysql OpenSSL
+
+# Set directory to VEP
+cd ./Software/ensembl-vep-release-114/
+    
+# Plugins
+export PERL5LIB=$PERL5LIB:/mnt/storage/nobackup/proj/spnmmd/Alice/Software/ensembl-vep-release-114/Plugins
+    
+# VEP
+{params.VEPSoftware}/vep --cache \
+    --dir_cache "./Software/ensembl-vep-release-114/.vep" \
+    --input_file {input.VCF} \
+    --output_file {output.VCF} \
+    --fasta {params.Fasta} \
+    --offline \
+    --species homo_sapiens \
+    --force_overwrite \
+    --format vcf \
+    --vcf \
+    --no_check_variants_order \
+    --check_existing \
+    --freq_pop gnomAD \
+    --assembly GRCh38 \
+    --hgvs \
+    --variant_class \
+    --keep_csq \
+    --af_gnomad \
+    --polyphen b \
+    --sift b \
+    --symbol \
+    --total_length \
+    --plugin LoFtool \
+    --plugin CADD,/Software/ensembl-vep-release-114/Plugins/cadd/whole_genome_SNVs.tsv.gz,/Software/ensembl-vep-release-114/Plugins/cadd/gnomad.genomes.r3.0.indel.tsv.gz \
+    --fields "Uploaded_variation,Location,Allele,Gene,Feature,SYMBOL,Existing_variation,VARIANT_CLASS,Consequence,cDNA_position,CDS_position,Protein_position,Amino_acids,HGVSc,HGVSp,BIOTYPE,IMPACT,CLIN_SIG,PolyPhen,SIFT,MAX_AF,gnomAD_AF,AF,CADD_PHRED,CADD_RAW" \
+    --max_af \
+    --pick \
+    --pick_order rank,canonical,tsl \
+    --buffer_size 50000 \
+    --fork 8
+```
 
 
 
