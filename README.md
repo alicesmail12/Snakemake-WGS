@@ -93,7 +93,7 @@ module load Java/17.0.6
 
 **Step 6: Combine GVCFs**
 
-Not only have I got multiple samples, I also have created GVCFs for every chromosome in each sample: so I need to combine them using `CombineGVCFs`. First I make a list of all the files I want to combine, and then input this into `CombineGVCFs` using the `--variant` flag.
+Not only have I got multiple samples, I also have created GVCFs for every chromosome in each sample: so I need to **combine** them using `CombineGVCFs` to make a **really large GVCF file**. First I make a list of all the files I want to combine, and then input this into `CombineGVCFs` using the `--variant` flag.
 
 ```python
 # Generate list
@@ -113,7 +113,7 @@ module load picard Java
 
 **Step 7: Convert to VCF**
 
-Now I have a massive GVCF file, I can use `GenotypeGVCFS` to convert it into a smaller VCF file that just contains locations where there is a variant in at least one sample. 
+Now I have a massive GVCF file, I can use `GenotypeGVCFS` to convert it into a smaller **VCF file** that just contains locations where there is a variant in at least one sample. 
 
 ```bash
 # Modules
@@ -128,7 +128,7 @@ module load picard Java
 
 **Step 8: Split Variant Types**
 
-From the vcf file, I can then use `SelectVariants` to split the vcf into indels and SNPs for later filtering.
+From the vcf file, I can then use `SelectVariants` to **split the vcf** into indels and SNPs for later filtering.
 
 ```bash
 # Modules
@@ -149,7 +149,7 @@ module load picard Java
 
 **Step 9: Filter Variant Types**
 
-With the split variant files I can apply different quality control filters using `VariantFiltration`.
+With the split variant files I can apply different **quality control filters** using `VariantFiltration`.
 - `QD` is a metric representing normalised variant quality. In the below code variants with a QD below 2 are marked with 'QD2'.
 - `QUAL` is the variant confidence (QD is derived from QUAL).
 - `SOR` is the Strand Odds Ratio, an estimation of strand bias that takes into account the ratio of reads covering two alleles.
@@ -206,7 +206,7 @@ bcftools stats -s - {input.VCF} > {output.VCFStats}
 
 **Step 11: VEP**
 
-Here I use `VEP` locally to gather extra information about each variant, such as gene, PolyPhen/Sift/CADD scores and gnomAD allele frequencies. To run this step I downloaded VEP (https://grch38.ensembl.org/info/docs/tools/vep/script/vep_download.html) and some files required for the plugins. VEP can take a really long time depending on how many annotations you want to make. 
+Here I use `VEP` locally to gather **extra information** about each variant, such as gene, PolyPhen/Sift/CADD scores and gnomAD allele frequencies. To run this step I downloaded VEP (https://grch38.ensembl.org/info/docs/tools/vep/script/vep_download.html) and some files required for the plugins. VEP can take a really long time depending on how many annotations you want to make. 
 
 ```bash
 # Modules
