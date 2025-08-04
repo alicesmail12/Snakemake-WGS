@@ -206,7 +206,7 @@ bcftools stats -s - {input.VCF} > {output.VCFStats}
 
 **Step 11: VEP**
 
-Here I use `VEP` locally to gather **extra information** about each variant, such as gene, PolyPhen/Sift/CADD scores and gnomAD allele frequencies. To run this step I downloaded VEP (https://grch38.ensembl.org/info/docs/tools/vep/script/vep_download.html) and some files required for the plugins. VEP can take a really long time depending on how many annotations you want to make. 
+Here I use `VEP` locally to gather **extra information** about each variant, such as the nearest gene, PolyPhen/Sift/CADD scores and gnomAD allele frequencies. To run this step I downloaded VEP (https://grch38.ensembl.org/info/docs/tools/vep/script/vep_download.html) and some files required for the plugins. VEP can take a really long time depending on how many annotations you want to make. 
 
 ```bash
 # Modules
