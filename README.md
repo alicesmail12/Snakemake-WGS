@@ -150,7 +150,13 @@ module load picard Java
 **Step 9: Filter Variant Types**
 
 With the split variant files I can apply different quality control filters.
-- `QD` is a metric representing normalised variant quality.
+- `QD` is a metric representing normalised variant quality. In the below code variants with a QD below 2 are marked with 'QD2'.
+- `QUAL` is the variant confidence (QD is derived from QUAL).
+- `SOR` is the Strand Odds Ratio, an estimation of strand bias that takes into account the ratio of reads covering two alleles.
+- `FS` is called Fisher strand, representing the Phred scaled probability of strand bias.
+- `MQ` gives a value for mapping quality.
+- `MQRankSum` compares mapping quality scores that support the reference allele or the alternate allele.
+- `ReadPosRankSumTest` compares whether the positions of the reference and alternate alleles are different across reads. A negative value means that the alternate allele is found at the ends of each read more often than the reference allele (and vice versa).
 
 ```bash
 # Modules
