@@ -251,5 +251,38 @@ export PERL5LIB=$PERL5LIB:/Software/ensembl-vep-release-114/Plugins
     --fork 8
 ```
 
+**Step 12: Format VEP Output**
+
+I have a **Python script** that takes in each VCF line and format the results for each sample, generating a **csv file**. The variables I pass to the Python file include the VCF file, the sample names (what I want the output to be called), an OMIM file (to annotate the VCF with OMIM entries), and the working directory where the output will be created.
+
+```bash
+# Modules
+module load Python zlib pandas
+    
+# Python
+python {params.FormatPy} --VCFFile {input.VCF} \
+    --SampleName {params.Run} \
+    --OMIMFile {params.OMIM} \
+    --WDir {params.VEP_Dir}
+```
+
+Within the python file I can apply several filters (such as for high CADD scores or low AFs).
+
+```python
+# CADD
+vcfCombinedFilt = vcfCombinedFilt.loc[((vcfCombinedFilt['CADD_PHRED'])>11)]
+
+# Max AF
+vcfCombinedFilt = vcfCombinedFilt.loc[((vcfCombinedFilt['MAX_AF'])<0.01)]
+```
+
+
+
+
+
+
+
+
+
 
 
