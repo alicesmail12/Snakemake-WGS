@@ -266,7 +266,7 @@ python {params.FormatPy} --VCFFile {input.VCF} \
     --WDir {params.VEP_Dir}
 ```
 
-Within the python file I can apply several filters (such as for high CADD scores or low AFs).
+Within the Python file I can also apply several **filters** (such as for high CADD scores or low AFs).
 
 ```python
 # CADD
