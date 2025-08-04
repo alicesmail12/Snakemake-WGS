@@ -216,7 +216,7 @@ module load Perl tabix Bio-DB-HTS DBD-mysql OpenSSL
 cd ./Software/ensembl-vep-release-114/
     
 # Plugins
-export PERL5LIB=$PERL5LIB:/mnt/storage/nobackup/proj/spnmmd/Alice/Software/ensembl-vep-release-114/Plugins
+export PERL5LIB=$PERL5LIB:/Software/ensembl-vep-release-114/Plugins
     
 # VEP
 {params.VEPSoftware}/vep --cache \
