@@ -147,8 +147,41 @@ module load picard Java
     -O {output.VCFIndel}
 ```
 
+**Step 9: Filter Variant Types**
 
+With the split variant files I can apply different quality control filters.
+- `QD` is a metric representing normalised variant quality.
 
+```bash
+# Modules
+module load picard Java
+
+# Filtering
+{params.GATKDir}/gatk VariantFiltration \
+    -V {input.VCFSNP} \
+    -filter "QD < 2.0" --filter-name "QD2" \
+    -filter "QUAL < 30.0" --filter-name "QUAL30" \
+    -filter "SOR > 3.0" --filter-name "SOR3" \
+    -filter "FS > 60.0" --filter-name "FS60" \
+    -filter "MQ < 40.0" --filter-name "MQ40" \
+    -filter "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+    -filter "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+    -O {output.VCFSNP}
+    
+{params.GATKDir}/gatk VariantFiltration \
+    -V {input.VCFIndel} \
+    -filter "QD < 2.0" --filter-name "QD2" \
+    -filter "QUAL < 30.0" --filter-name "QUAL30" \
+    -filter "FS > 200.0" --filter-name "FS200" \
+    -filter "ReadPosRankSum < -20.0" --filter-name "ReadPosRankSum-20"  \
+    -O {output.VCFIndel}
+
+# Merge
+java -jar $EBROOTPICARD/picard.jar MergeVcfs \
+    I={output.VCFSNP} \
+    I={output.VCFIndel} \
+    O={output.VCF}
+```
 
 
 
