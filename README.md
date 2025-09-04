@@ -21,6 +21,8 @@ module load FastQC
 fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 ```
 
+![alt text](https://github.com/alicesmail12/Snakemake-WGS/blob/main/FASTQC.png?raw=true)
+
 **Step 2: BWA Alignment**
 
 Then I used `BWA mem`, which takes a reference genome and **aligns reads** from a FASTQ file using the Burrows-Wheeler Aligner algorithm. `SAMtools sort` then sorts the resulting **BAM file** by coordinate, and `SAMtools index` indexes the output BAM file to generate a **BAI file**. 
