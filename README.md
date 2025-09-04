@@ -3,6 +3,10 @@ Here I have created a snakemake workflow that performs WGS on several samples at
 
 ![alt text](https://github.com/alicesmail12/Snakemake-WGS/blob/main/WGS-Snakemake-DAG.png?raw=true)
 
+The resulting file looks like this:
+
+
+
 ### Steps
 **Step 1: FastQC**
 
