@@ -1,7 +1,7 @@
 # Snakemake-WGS
 Here I have created a snakemake workflow that performs WGS on several samples at once from FASTQ files. It can take a really long time, depending on HPC capacity! Here I have just listed what each step does. Variables in curly braces are specified in my snakemake rules (see `Snakefile.py`).
 
-![alt text](https://github.com/alicesmail12/Snakemake-WGS/blob/main/WGS-DAG.png?raw=true)
+![alt text](https://github.com/alicesmail12/Snakemake-WGS/blob/main/WGS-Snakemake-DAG.png?raw=true)
 
 ### Steps
 **Step 1: FastQC**
