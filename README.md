@@ -5,7 +5,7 @@ Here I have created a snakemake workflow that performs WGS on several samples at
 
 The resulting file looks like this:
 
-![alt text](https://github.com/alicesmail12/Snakemake-WGS/blob/main/WGS-Table-Out.png?raw=true)
+![alt text](https://github.com/alicesmail12/Snakemake-WGS/blob/main/WGS-Out-Table.png?raw=true)
 
 ### Steps
 **Step 1: FastQC**
