@@ -22,7 +22,7 @@ fastqc {File}_R{Read}.fastq -o {FASTQC_DIR}
 ```
 
 ![](https://github.com/alicesmail12/Snakemake-WGS/blob/main/FASTQC.png?raw=true)
-<center>*Example FastQC Output*</center>
+<p align="center">*Example FastQC Output*</p>
 
 **Step 2: BWA Alignment**
 
